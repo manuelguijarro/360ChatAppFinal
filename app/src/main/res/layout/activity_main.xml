@@ -11,7 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/primario"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:id="@+id/main_toolbar">
 
         <TextView
             android:layout_width="wrap_content"
@@ -51,7 +52,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:id="@+id/bottom_navigation"/>
+        android:id="@+id/bottom_navigation"
+        app:menu="@menu/bottom_navigation_menu"/>
 
 
 </RelativeLayout>

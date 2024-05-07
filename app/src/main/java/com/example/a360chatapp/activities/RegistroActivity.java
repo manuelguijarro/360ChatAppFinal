@@ -1,6 +1,8 @@
 package com.example.a360chatapp.activities;
 
 
+import static com.example.a360chatapp.firebase.FirebaseUtil.obtenerUsuarioUid;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -18,7 +21,10 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.a360chatapp.R;
 import com.example.a360chatapp.controllers.EmailController;
 import com.example.a360chatapp.controllers.PasswordController;
+import com.example.a360chatapp.db.models.Usuario;
 import com.example.a360chatapp.firebase.FirebaseUtil;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 
 
@@ -96,8 +102,26 @@ public class RegistroActivity extends AppCompatActivity {
                 });
     }
     private void continuarProcesoRegistro(){
-        FirebaseUtil.crearNuevoUsuarioDB();
-        cargarActivityMain();
+        crearNuevoUsuarioDB();
+    }
+    public  void crearNuevoUsuarioDB() {
+        try {
+            String usuarioUid = FirebaseUtil.obtenerUsuarioUid();
+            String emailUsuario = FirebaseUtil.obtenerUsuarioEmail();
+            String nombreUsuario = emailUsuario.split("@")[0];
+            Usuario usuario = new Usuario(usuarioUid, nombreUsuario, emailUsuario, Timestamp.now());
+            FirebaseUtil.obtenerDetallesUsuarioActual().set(usuario).addOnCompleteListener(task -> {
+                //Aqui iria codigo si queremos notificar.
+                //Lo enviamos al main porque a tenido exito
+                cargarActivityMain();
+            }).addOnFailureListener(e -> {
+                //AQUI IRIA EN CASO DE FALLO PARA NOTIFICAR AL USUARIO
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
     }
     private void setEnProgreso(boolean enProgreso){
         if (enProgreso){

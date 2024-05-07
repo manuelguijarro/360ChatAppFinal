@@ -11,7 +11,7 @@ public class FirebaseUtil {
 
 
     public static String obtenerUsuarioUid() {
-        String usuarioUid = "";
+        String usuarioUid = null;
         try {
             usuarioUid = FirebaseAuth.getInstance().getUid();
         } catch (Exception e) {
@@ -19,7 +19,13 @@ public class FirebaseUtil {
         }
         return usuarioUid;
     }
-
+    public static boolean estaUsuarioLogeado(){
+        if (null != obtenerUsuarioUid()){
+            return true;
+        }else {
+            return false;
+        }
+    }
     public static String obtenerUsuarioEmail() {
         String emailUsuario = "";
         try {
@@ -40,18 +46,5 @@ public class FirebaseUtil {
         return referenciaDocumentoUsuario;
     }
 
-    public static void crearNuevoUsuarioDB() {
-        try {
-            String usuarioUid = obtenerUsuarioUid();
-            String emailUsuario = obtenerUsuarioEmail();
-            String nombreUsuario = emailUsuario.split("@")[0];
-            Usuario usuario = new Usuario(usuarioUid, nombreUsuario, emailUsuario, Timestamp.now());
-            obtenerDetallesUsuarioActual().set(usuario).addOnCompleteListener(task -> {
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-
-    }
 }

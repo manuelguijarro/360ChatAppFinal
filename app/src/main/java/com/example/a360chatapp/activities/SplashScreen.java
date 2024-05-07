@@ -12,6 +12,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.a360chatapp.R;
+import com.example.a360chatapp.firebase.FirebaseUtil;
 
 public class SplashScreen extends AppCompatActivity {
     private ImageView imagenLogo;
@@ -26,7 +27,7 @@ public class SplashScreen extends AppCompatActivity {
             return insets;
         });
         cargarRecursosVista();
-        cargarActivityInicioApp();
+        cargarActivity();
     }
     private void cargarRecursosVista() {
         imagenLogo = findViewById(R.id.logo360chat);
@@ -34,10 +35,13 @@ public class SplashScreen extends AppCompatActivity {
     }
 
 
-    private void cargarActivityInicioApp() {
+    private void cargarActivity() {
         new Handler().postDelayed(() -> {
-            Intent intent = new Intent(SplashScreen.this, MainActivity.class);
-            startActivity(intent);
+            if (FirebaseUtil.estaUsuarioLogeado()){
+                startActivity(new Intent(SplashScreen.this, MainActivity.class));
+            }else {
+                startActivity(new Intent(SplashScreen.this, InicioSesionActivity.class));
+            }
             finish();
         }, 2000);
     }
