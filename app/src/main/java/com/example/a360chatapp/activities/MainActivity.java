@@ -28,6 +28,14 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
         mAuth = FirebaseAuth.getInstance();
+        FirebaseUser usuarioActual = mAuth.getCurrentUser();
+        if(null == usuarioActual){
+            //El usuario no esta autenticado y lo mandamos a la activity de iniciar sesion
+            cargarActivityInicioSesion();
+        }else{
+            //CONTINUAR AQUIusuarioActual.getClass()
+            cargarFragmentos();
+        }
     }
 
     @Override

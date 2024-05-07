@@ -1,15 +1,15 @@
 package com.example.a360chatapp.activities;
 
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -18,19 +18,17 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.a360chatapp.R;
 import com.example.a360chatapp.controllers.EmailController;
 import com.example.a360chatapp.controllers.PasswordController;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
+import com.example.a360chatapp.firebase.FirebaseUtil;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+
 
 public class RegistroActivity extends AppCompatActivity {
-    private FirebaseAuth mAuth;
     private EditText editTextEmail;
     private EditText editTextPassword;
     private EditText editTextRepetirPassword;
     private Button btnRegistrarse;
     private Button btnVolverAtras;
+    private ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +39,7 @@ public class RegistroActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        mAuth = FirebaseAuth.getInstance();
+
         cargarRecursosVista();
         cargarEventosBtn();
     }
@@ -54,12 +52,16 @@ public class RegistroActivity extends AppCompatActivity {
         //botones
         btnRegistrarse = findViewById(R.id.registrarButton);
         btnVolverAtras = findViewById(R.id.volverButton);
+        //progressBar
+        progressBar = findViewById(R.id.progressBarRegistro);
+
     }
     private void cargarEventosBtn() {
         btnRegistrarse.setOnClickListener(this::enviarFormulario);
         btnVolverAtras.setOnClickListener(this::cargarActivityInicioSesion);
     }
     private void enviarFormulario(View v) {
+        setEnProgreso(true);
         String emailUsuario = editTextEmail.getText().toString();
         String passwordUsuario = editTextPassword.getText().toString();
         String passwordRepetirUsuario = editTextRepetirPassword.getText().toString();
@@ -70,44 +72,64 @@ public class RegistroActivity extends AppCompatActivity {
                 PasswordController.comprobarPassword(passwordRepetirUsuario)) {
 
             crearNuevoUsuarioAuth( emailUsuario, passwordUsuario);
-
         } else {
             // mostrarMensajeAlerta("Datos incorrectos, vuelve a introducir los datos correctamente");
+            setEnProgreso(false);
         }
     }
 
-    private void cargarActivityInicioSesion(View view) {
-        new Handler().postDelayed(() -> {
-            Intent intent = new Intent(this, InicioSesionActivity.class);
-            startActivity(intent);
-            finish();
-        }, 1000);
-    }
-    private void cargarActivityMain() {
-        new Handler().postDelayed(() -> {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-            finish();
-        }, 1000);
-    }
+
     private void crearNuevoUsuarioAuth(String email, String password){
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            //Log.d(TAG, "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            cargarActivityMain();
-                        } else {
-                            // If sign in fails, display a message to the user.
-                           // Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            //Toast.makeText(EmailPasswordActivity.this, "Authentication failed.",
-                            //        Toast.LENGTH_SHORT).show();
-                            //updateUI(null);
-                        }
+        String passwordCifrada = PasswordController.get_SHA_512_SecurePassword(password,"ambgk");
+        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, passwordCifrada)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        continuarProcesoRegistro();
+                    } else {
+                        setEnProgreso(false);
+                        // If sign in fails, display a message to the user.
+                       // Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                        //Toast.makeText(EmailPasswordActivity.this, "Authentication failed.",
+                        //        Toast.LENGTH_SHORT).show();
+                        //updateUI(null);
                     }
                 });
+    }
+    private void continuarProcesoRegistro(){
+        FirebaseUtil.crearNuevoUsuarioDB();
+        cargarActivityMain();
+    }
+    private void setEnProgreso(boolean enProgreso){
+        if (enProgreso){
+            btnRegistrarse.setVisibility(View.GONE);
+            btnVolverAtras.setVisibility(View.GONE);
+            progressBar.setVisibility(View.VISIBLE);
+        }else {
+            btnRegistrarse.setVisibility(View.VISIBLE);
+            btnVolverAtras.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
+        }
+    }
+    private void cargarActivityInicioSesion(View view) {
+        try {
+            new Handler().postDelayed(() -> {
+                Intent intent = new Intent(this, InicioSesionActivity.class);
+                startActivity(intent);
+                finish();
+            }, 1000);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    private void cargarActivityMain() {
+        try {
+            new Handler().postDelayed(() -> {
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }, 1000);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }
