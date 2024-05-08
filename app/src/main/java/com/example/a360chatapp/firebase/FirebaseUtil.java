@@ -4,6 +4,7 @@ package com.example.a360chatapp.firebase;
 import com.example.a360chatapp.db.models.Usuario;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -46,5 +47,7 @@ public class FirebaseUtil {
         return referenciaDocumentoUsuario;
     }
 
-
+    public static CollectionReference usuariosCollectionReference(){
+        return FirebaseFirestore.getInstance().collection("users");
+    }
 }

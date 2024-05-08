@@ -16,7 +16,6 @@ import com.example.a360chatapp.R;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class InicioSesionActivity extends AppCompatActivity {
-    private FirebaseAuth mAuth;
     private Button btnRegistro;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +27,6 @@ public class InicioSesionActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        mAuth = FirebaseAuth.getInstance();
         cargarRecursosVista();
         cargarEventosBtn();
     }

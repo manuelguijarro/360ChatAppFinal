@@ -5,6 +5,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="blanco_sombreado">#FDFDFD</color>
+    <color name="blanco_sombreado">#FAFAFA</color>
     <color name="gris_claro">#C3C3C3</color>
 </resources>

@@ -11,19 +11,17 @@ import android.view.ViewGroup;
 import com.example.a360chatapp.R;
 
 
-public class ChatFragment extends Fragment {
+public class PerfilFragment extends Fragment {
 
-
-    public ChatFragment() {
-
+    public PerfilFragment() {
+        // Required empty public constructor
     }
-
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_chat, container, false);
+        return inflater.inflate(R.layout.fragment_perfil, container, false);
     }
 }

@@ -3,20 +3,29 @@ package com.example.a360chatapp.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.a360chatapp.R;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.example.a360chatapp.firebase.FirebaseUtil;
+import com.example.a360chatapp.fragments.ChatFragment;
+import com.example.a360chatapp.fragments.PerfilFragment;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
+    private BottomNavigationView bottomNavigationView;
+    private ImageButton btnBuscar;
+    private ChatFragment chatFragment;
+    private PerfilFragment perfilFragment;
 
-    private FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,29 +36,55 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        mAuth = FirebaseAuth.getInstance();
-        FirebaseUser usuarioActual = mAuth.getCurrentUser();
-        if(null == usuarioActual){
-            //El usuario no esta autenticado y lo mandamos a la activity de iniciar sesion
-            cargarActivityInicioSesion();
-        }else{
+
+        if(FirebaseUtil.estaUsuarioLogeado()){
             //CONTINUAR AQUIusuarioActual.getClass()
-            cargarFragmentos();
+            instanciarFragmentos();
+            cargarRecursosVista();
+            cargarEventoBtnBuscar();
+            cargarEventoMenuInferior();
+
+        }else{
+            cargarActivityInicioSesion();
         }
     }
 
+    private void cargarEventoMenuInferior() {
+        bottomNavigationView.setOnItemSelectedListener(menuItem -> {
+            if (menuItem.getItemId() == R.id.menu_chats){
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.main_frame_layout, chatFragment)
+                        .commit();
+            }
+            if (menuItem.getItemId() == R.id.menu_perfil){
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.main_frame_layout, perfilFragment)
+                        .commit();
+            }
+            return true;
+        });
+        bottomNavigationView.setSelectedItemId(R.id.menu_chats);
+    }
+    private void cargarEventoBtnBuscar(){
+        btnBuscar.setOnClickListener(v -> {
+            startActivity(new Intent(MainActivity.this, BuscarUsuarioActivity.class));
+        });
+    }
     @Override
     protected void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser usuarioActual = mAuth.getCurrentUser();
-        if(null == usuarioActual){
-            //El usuario no esta autenticado y lo mandamos a la activity de iniciar sesion
+        if(!FirebaseUtil.estaUsuarioLogeado()){
             cargarActivityInicioSesion();
-        }else{
-            cargarFragmentos();
         }
 
+    }
+    private void cargarRecursosVista(){
+        //Botones
+        btnBuscar = findViewById(R.id.btn_buscar_main);
+        //Menu inferior
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
     }
 
     private void cargarActivityInicioSesion() {
@@ -59,5 +94,8 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }, 1650);
     }
-    private void cargarFragmentos() { }
+    private void instanciarFragmentos() {
+        chatFragment = new ChatFragment();
+        perfilFragment = new PerfilFragment();
+    }
 }
