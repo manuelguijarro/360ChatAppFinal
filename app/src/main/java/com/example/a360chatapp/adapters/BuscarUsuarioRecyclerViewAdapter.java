@@ -1,6 +1,7 @@
 package com.example.a360chatapp.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +12,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.a360chatapp.R;
+import com.example.a360chatapp.activities.ChatIndividualActivity;
 import com.example.a360chatapp.db.models.Usuario;
 import com.example.a360chatapp.firebase.FirebaseUtil;
+import com.example.a360chatapp.utils.IntentUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
@@ -36,6 +39,11 @@ public class BuscarUsuarioRecyclerViewAdapter extends FirestoreRecyclerAdapter<U
 
         usuarioViewHolder.itemView.setOnClickListener(v -> {
             //De aquí iremos al chat activity
+            Intent intent = new Intent(context, ChatIndividualActivity.class);
+
+            IntentUtil.enviarUsuarioIntent(intent,usuario);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
         });
     }
 
