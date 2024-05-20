@@ -16,4 +16,6 @@
     <string name="nombre_usuario">Nombre de usuario</string>
     <string name="email_usuario">Email de usuario</string>
     <string name="escribe_mensaje">Escribe el mensaje</string>
+    <string name="actualizar_perfil_btn">ACTUALIZAR PERFIL</string>
+    <string name="cerrar_sesion">Cerrar sesión</string>
 </resources>

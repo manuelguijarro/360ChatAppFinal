@@ -91,4 +91,7 @@ public class FirebaseUtil {
             return usuariosCollectionReference().document(idsUsuario.get(0));
         }
     }
+    public static void cerrarSesion(){
+        FirebaseAuth.getInstance().signOut();
+    }
 }
