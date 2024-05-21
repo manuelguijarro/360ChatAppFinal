@@ -2,6 +2,7 @@ package com.example.a360chatapp.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +40,14 @@ public class ListaChatRecyclerViewAdapter extends FirestoreRecyclerAdapter<Chat,
                 .get().addOnCompleteListener(task -> {
                     if (task.isSuccessful()){
                         Usuario usuario = task.getResult().toObject(Usuario.class);
+
+                        FirebaseUtil.obtenerOtraReferenciaStorage(usuario.getId()).getDownloadUrl().addOnCompleteListener(t -> {
+                            if (t.isSuccessful()){
+                                Uri uri = t.getResult();
+                                GeneralUtil.setImagenPerfil(context,uri,chatViewHolder.imagenPerfil);
+                            }
+                        });
+
                         chatViewHolder.textViewEmailUsuario.setText(usuario.getNombre());
                         if (chat.getIdUltimoMensajeEmisor().equals(FirebaseUtil.obtenerUsuarioUid()) && null != chat.getUltimoMensaje()){
                             chatViewHolder.ultimoMensaje.setText("Tu : " + chat.getUltimoMensaje());

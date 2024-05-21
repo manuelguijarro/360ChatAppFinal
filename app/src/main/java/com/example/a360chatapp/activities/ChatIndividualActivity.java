@@ -1,5 +1,6 @@
 package com.example.a360chatapp.activities;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -23,6 +24,7 @@ import com.example.a360chatapp.db.models.Chat;
 import com.example.a360chatapp.db.models.Mensaje;
 import com.example.a360chatapp.db.models.Usuario;
 import com.example.a360chatapp.firebase.FirebaseUtil;
+import com.example.a360chatapp.utils.GeneralUtil;
 import com.example.a360chatapp.utils.IntentUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -47,6 +49,7 @@ public class ChatIndividualActivity extends AppCompatActivity {
     private ImageButton btnVolver;
     private RecyclerView recyclerView;
     private ChatRecyclerViewAdapter chatRecyclerViewAdapter;
+    private ImageView imageViewPerfilUsuario;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,7 +123,14 @@ public class ChatIndividualActivity extends AppCompatActivity {
         nombreUsuario.setText(usuarioChat.getNombre());
         //RecyclerView
         recyclerView = findViewById(R.id.chat_recycler_view);
-
+        //Imagen
+        imageViewPerfilUsuario = findViewById(R.id.perfil_imagen_view);
+        FirebaseUtil.obtenerOtraReferenciaStorage(usuarioChat.getId()).getDownloadUrl().addOnCompleteListener(task -> {
+            if (task.isSuccessful()){
+                Uri uri = task.getResult();
+                GeneralUtil.setImagenPerfil(this,uri,imageViewPerfilUsuario);
+            }
+        });
     }
 
     private void cargarEventosBtn() {

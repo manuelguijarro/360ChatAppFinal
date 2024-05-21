@@ -15,9 +15,9 @@
             android:layout_height="160dp"
             android:background="@drawable/circular_background"
             android:backgroundTint="@color/primario"
-            android:src="@drawable/baseline_person_24"
+            android:src="@drawable/baseline_person_24_grey"
             android:scaleType="centerCrop"
-            app:tint="@color/blanco_sombreado"
+
             android:layout_marginBottom="40dp"
             android:id="@+id/imagen_usuario_perfil"/>
 

@@ -9,9 +9,8 @@
         android:layout_width="52dp"
         android:layout_height="52dp"
         android:background="@drawable/customborder"
-        android:src="@drawable/baseline_person_24"
+        android:src="@drawable/baseline_person_24_grey"
         android:padding="4dp"
-        app:tint="@color/gris_claro"
         android:backgroundTint="@color/blanco_sombreado"
         android:layout_centerInParent="true"
         android:id="@+id/perfil_imagen_view"/>

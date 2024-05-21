@@ -1,7 +1,12 @@
 package com.example.a360chatapp.utils;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.a360chatapp.db.models.Usuario;
 
 public class IntentUtil {
@@ -18,7 +23,7 @@ public class IntentUtil {
         usuario.setNombre(intent.getStringExtra("nombre"));
         usuario.setEmail(intent.getStringExtra("email"));
         usuario.setId(intent.getStringExtra("id"));
-
         return usuario;
     }
+
 }

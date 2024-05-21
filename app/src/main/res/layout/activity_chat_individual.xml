@@ -23,7 +23,7 @@
             android:textColor="@color/white"
             android:layout_marginStart="10dp"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/imagen_perfil_chat"
+            android:layout_toRightOf="@+id/imagen_perfil_chat_usuario"
             android:id="@+id/nombre_usuario_chat"/>
 
         <include layout="@layout/perfil_imagen_view"
@@ -31,7 +31,7 @@
             android:layout_height="48dp"
             android:layout_marginStart="10dp"
             android:layout_toRightOf="@id/btn_volver_chat"
-            android:id="@+id/imagen_perfil_chat"
+            android:id="@+id/imagen_perfil_chat_usuario"
             />
         <ImageButton
             android:layout_width="32dp"

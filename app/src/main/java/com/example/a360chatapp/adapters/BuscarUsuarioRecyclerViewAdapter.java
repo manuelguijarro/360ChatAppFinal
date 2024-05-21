@@ -2,6 +2,7 @@ package com.example.a360chatapp.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import com.example.a360chatapp.R;
 import com.example.a360chatapp.activities.ChatIndividualActivity;
 import com.example.a360chatapp.db.models.Usuario;
 import com.example.a360chatapp.firebase.FirebaseUtil;
+import com.example.a360chatapp.utils.GeneralUtil;
 import com.example.a360chatapp.utils.IntentUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -32,11 +34,17 @@ public class BuscarUsuarioRecyclerViewAdapter extends FirestoreRecyclerAdapter<U
     protected void onBindViewHolder(@NonNull UsuarioViewHolder usuarioViewHolder, int i, @NonNull Usuario usuario) {
         usuarioViewHolder.textViewNombreUsuario.setText(usuario.getNombre());
         usuarioViewHolder.textViewEmailUsuario.setText(usuario.getEmail());
+
         if(usuario.getId().equals(FirebaseUtil.obtenerUsuarioUid())){
             usuarioViewHolder.textViewNombreUsuario.setText(usuario.getNombre()+ "(Yo)");
 
         }
-
+        FirebaseUtil.obtenerOtraReferenciaStorage(usuario.getId()).getDownloadUrl().addOnCompleteListener(t -> {
+            if (t.isSuccessful()){
+                Uri uri = t.getResult();
+                GeneralUtil.setImagenPerfil(context,uri,usuarioViewHolder.imagenPerfil);
+            }
+        });
         usuarioViewHolder.itemView.setOnClickListener(v -> {
             //De aquí iremos al chat activity
             Intent intent = new Intent(context, ChatIndividualActivity.class);
