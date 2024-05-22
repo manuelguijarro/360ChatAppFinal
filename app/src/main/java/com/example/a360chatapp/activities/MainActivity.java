@@ -18,7 +18,10 @@ import com.example.a360chatapp.R;
 import com.example.a360chatapp.firebase.FirebaseUtil;
 import com.example.a360chatapp.fragments.ChatFragment;
 import com.example.a360chatapp.fragments.PerfilFragment;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
@@ -43,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
             cargarRecursosVista();
             cargarEventoBtnBuscar();
             cargarEventoMenuInferior();
+            obtenerTokenNotificacion();
 
         }else{
             cargarActivityInicioSesion();
@@ -85,6 +89,16 @@ public class MainActivity extends AppCompatActivity {
         btnBuscar = findViewById(R.id.btn_buscar_main);
         //Menu inferior
         bottomNavigationView = findViewById(R.id.bottom_navigation);
+    }
+
+
+    private void obtenerTokenNotificacion(){
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+            if (task.isSuccessful()){
+                String tokenNotificacion = task.getResult();
+                FirebaseUtil.obtenerDetallesUsuarioActual().update("tokenNotificacion",tokenNotificacion);
+            }
+        });
     }
 
     private void cargarActivityInicioSesion() {

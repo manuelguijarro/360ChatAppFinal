@@ -29,6 +29,7 @@ import com.example.a360chatapp.utils.GeneralUtil;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class PerfilFragment extends Fragment {
     private ImageView imagenPerfil;
@@ -133,10 +134,15 @@ public class PerfilFragment extends Fragment {
         });
     }
     private void cerrarSesionPerfilUsuario(View view){
-        FirebaseUtil.cerrarSesion();
-        Intent intent = new Intent(getContext(),SplashScreen.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
+        FirebaseMessaging.getInstance().deleteToken().addOnCompleteListener(task -> {
+            if (task.isSuccessful()){
+                FirebaseUtil.cerrarSesion();
+                Intent intent = new Intent(getContext(),SplashScreen.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+        });
+
     }
     private void cargarDatosUsuarioActual(){
         setEnProgreso(true);

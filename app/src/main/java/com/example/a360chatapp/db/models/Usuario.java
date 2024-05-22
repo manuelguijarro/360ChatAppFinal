@@ -9,23 +9,19 @@ public class Usuario {
     private String id;
     private String nombre;
     private String email;
-    private String nombreImagenPerfil;
     private Timestamp fechaCreacion;
     private Boolean estadoConexion;
-    private List<String>amigosId;
+    private String tokenNotificacion;
 
     public Usuario() {
-        // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
     public Usuario(String id, String nombre , String email,Timestamp fechaCreacion ) {
         this.id = id;
         this.nombre = nombre;
         this.email = email;
-        this.nombreImagenPerfil = "default.png";
         this.estadoConexion = false;
         this.fechaCreacion = fechaCreacion;
-        this.amigosId = new LinkedList<>();
     }
 
     public String getId() {
@@ -52,13 +48,7 @@ public class Usuario {
         this.email = email;
     }
 
-    public String getNombreImagenPerfil() {
-        return nombreImagenPerfil;
-    }
 
-    public void setNombreImagenPerfil(String nombreImagenPerfil) {
-        this.nombreImagenPerfil = nombreImagenPerfil;
-    }
 
     public Boolean getEstadoConexion() {
         return estadoConexion;
@@ -74,5 +64,13 @@ public class Usuario {
 
     public void setEstadoConexion(Boolean estadoConexion) {
         this.estadoConexion = estadoConexion;
+    }
+
+    public String getTokenNotificacion() {
+        return tokenNotificacion;
+    }
+
+    public void setTokenNotificacion(String tokenNotificacion) {
+        this.tokenNotificacion = tokenNotificacion;
     }
 }
